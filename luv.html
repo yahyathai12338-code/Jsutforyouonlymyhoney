@@ -1,0 +1,739 @@
+<html>
+  <!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🌹 สำหรับอ้อมแอ้ม</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --rose:       #c0394b;
+  --rose-light: #e06070;
+  --rose-pale:  #fff0f3;
+  --rose-muted: #a07080;
+  --rose-dark:  #7a1525;
+  --cream:      #fffaf8;
+  --ink:        #2e1018;
+  --gold:       #c9964a;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ─── LOCK SCREEN ─── */
+#lock-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #0d0307;
+  text-align: center;
+  padding: 32px;
+}
+
+/* animated gradient bg */
+#lock-screen::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 20% 30%, rgba(120,10,30,0.45) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 60% at 80% 70%, rgba(80,5,20,0.4) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 40% at 60% 20%, rgba(180,40,60,0.2) 0%, transparent 60%);
+  animation: bgpulse 8s ease-in-out infinite alternate;
+}
+
+@keyframes bgpulse {
+  0%   { opacity: 0.7; }
+  100% { opacity: 1; }
+}
+
+.lock-stars {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.star {
+  position: absolute;
+  border-radius: 50%;
+  background: white;
+  animation: twinkle ease-in-out infinite;
+}
+
+@keyframes twinkle {
+  0%, 100% { opacity: 0.1; transform: scale(1); }
+  50%       { opacity: 0.7; transform: scale(1.5); }
+}
+
+.lock-inner {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.lock-icon {
+  font-size: 56px;
+  margin-bottom: 28px;
+  animation: float 3.5s ease-in-out infinite;
+  filter: drop-shadow(0 0 28px rgba(220,80,100,0.6));
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(-3deg); }
+  50%       { transform: translateY(-12px) rotate(3deg); }
+}
+
+.lock-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(22px, 5vw, 36px);
+  color: rgba(255,255,255,0.92);
+  font-style: italic;
+  font-weight: 400;
+  margin-bottom: 6px;
+  letter-spacing: 0.5px;
+}
+
+.lock-sub {
+  font-size: 11px;
+  color: rgba(255,180,190,0.45);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  font-weight: 300;
+  margin-bottom: 44px;
+}
+
+/* countdown grid */
+.lock-countdown {
+  display: grid;
+  grid-template-columns: repeat(4, 72px);
+  gap: 10px;
+  margin-bottom: 36px;
+}
+@media (max-width: 380px) {
+  .lock-countdown { grid-template-columns: repeat(4, 58px); gap: 7px; }
+}
+
+.lock-unit {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(220,80,100,0.18);
+  border-radius: 12px;
+  padding: 14px 6px 10px;
+}
+
+.lock-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 32px;
+  font-weight: 600;
+  color: #ff8fa3;
+  display: block;
+  line-height: 1;
+}
+@media (max-width: 380px) { .lock-num { font-size: 26px; } }
+
+.lock-label {
+  font-size: 9px;
+  color: rgba(255,160,175,0.45);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-top: 5px;
+  display: block;
+}
+
+.lock-hint {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 15px;
+  font-style: italic;
+  color: rgba(255,190,200,0.35);
+  max-width: 260px;
+  line-height: 1.8;
+  margin-bottom: 28px;
+}
+
+/* progress */
+.lock-progress { width: 220px; }
+.pb-bg {
+  height: 1.5px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 2px;
+  overflow: hidden;
+}
+.pb-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #8b1a2a, #ff8fa3);
+  border-radius: 2px;
+  transition: width 1s linear;
+}
+.pb-label {
+  text-align: right;
+  font-size: 10px;
+  color: rgba(255,150,165,0.4);
+  margin-top: 5px;
+  letter-spacing: 1px;
+}
+
+/* ─── REVEAL OVERLAY ─── */
+#reveal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: #0d0307;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.reveal-heart {
+  font-size: 80px;
+  animation: heartpop 0.55s ease-in-out infinite alternate;
+}
+@keyframes heartpop {
+  from { transform: scale(1); filter: drop-shadow(0 0 20px rgba(255,80,120,0.5)); }
+  to   { transform: scale(1.25); filter: drop-shadow(0 0 40px rgba(255,80,120,0.9)); }
+}
+
+.reveal-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  font-style: italic;
+  color: rgba(255,180,190,0.7);
+  animation: fadein 0.6s ease 0.3s both;
+}
+@keyframes fadein { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+
+/* ─── MAIN CONTENT ─── */
+#main-content {
+  display: none;
+  opacity: 0;
+  transition: opacity 1.4s ease;
+}
+#main-content.visible {
+  display: block;
+  opacity: 1;
+}
+
+/* floating petals */
+.petals-bg {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.petal {
+  position: absolute;
+  border-radius: 50% 0 50% 0;
+  opacity: 0;
+  animation: petalfall linear infinite;
+}
+@keyframes petalfall {
+  0%   { transform: translateY(-40px) rotate(0deg); opacity: 0.55; }
+  100% { transform: translateY(110vh) rotate(1080deg); opacity: 0; }
+}
+
+/* ─── HERO ─── */
+.hero {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 80px 24px 56px;
+  background: linear-gradient(170deg, #fff0f3 0%, var(--cream) 100%);
+  overflow: hidden;
+}
+
+/* decorative lines */
+.hero::before, .hero::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 1px;
+  background: rgba(192,57,75,0.18);
+}
+.hero::before { top: 0; height: 40px; }
+.hero::after  { bottom: 0; height: 40px; }
+
+.hero-ornament {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 11px;
+  letter-spacing: 5px;
+  color: var(--rose-muted);
+  text-transform: uppercase;
+  opacity: 0.6;
+  margin-bottom: 20px;
+}
+
+.hero-rose {
+  font-size: 62px;
+  display: block;
+  margin-bottom: 18px;
+  animation: rosetilt 2.5s ease-in-out infinite;
+  filter: drop-shadow(0 12px 28px rgba(192,57,75,0.25));
+}
+@keyframes rosetilt {
+  0%, 100% { transform: rotate(-4deg) scale(1); }
+  50%       { transform: rotate(4deg) scale(1.08); }
+}
+
+.hero-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(32px, 7vw, 58px);
+  color: var(--rose-dark);
+  font-weight: 600;
+  line-height: 1.12;
+  margin-bottom: 10px;
+}
+
+.hero-sub {
+  font-size: 11px;
+  color: var(--rose-muted);
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  font-weight: 300;
+  opacity: 0.7;
+}
+
+/* thin divider */
+.divider {
+  width: 48px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--rose), transparent);
+  margin: 20px auto 0;
+}
+
+/* ─── SECTIONS ─── */
+.section {
+  position: relative;
+  z-index: 1;
+  max-width: 620px;
+  margin: 0 auto 28px;
+  padding: 0 18px;
+}
+
+.card {
+  background: white;
+  border-radius: 20px;
+  border: 1px solid rgba(192,57,75,0.1);
+  box-shadow: 0 2px 32px rgba(192,57,75,0.06), 0 1px 4px rgba(192,57,75,0.04);
+  overflow: hidden;
+}
+
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  padding: 14px 24px;
+  border-bottom: 1px solid rgba(192,57,75,0.08);
+  background: rgba(255,240,243,0.5);
+}
+
+.card-header-icon { font-size: 16px; }
+
+.card-header-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 16px;
+  font-style: italic;
+  color: var(--rose);
+  font-weight: 400;
+  letter-spacing: 0.3px;
+}
+
+.card-body { padding: 26px 24px; }
+
+/* ─── MAIN COUNTDOWN ─── */
+.event-label {
+  text-align: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 19px;
+  font-style: italic;
+  color: var(--rose);
+  margin-bottom: 20px;
+  opacity: 0.85;
+}
+
+.main-countdown {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  text-align: center;
+}
+
+.main-unit {
+  background: var(--rose-pale);
+  border-radius: 14px;
+  padding: 18px 8px;
+  border: 1px solid rgba(192,57,75,0.08);
+}
+
+.main-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 36px;
+  font-weight: 600;
+  color: var(--rose);
+  display: block;
+  line-height: 1;
+}
+
+.main-label {
+  font-size: 9px;
+  color: var(--rose-muted);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-top: 5px;
+  opacity: 0.8;
+}
+
+/* ─── LETTER ─── */
+.letter-deco-top {
+  text-align: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 13px;
+  letter-spacing: 4px;
+  color: rgba(192,57,75,0.3);
+  margin-bottom: 18px;
+  text-transform: uppercase;
+}
+
+.letter-body {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 17.5px;
+  line-height: 2.05;
+  color: #4a2030;
+  font-style: italic;
+  white-space: pre-wrap;
+}
+
+.letter-sig {
+  text-align: right;
+  margin-top: 24px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(192,57,75,0.1);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 22px;
+  color: var(--rose);
+  font-style: italic;
+}
+
+/* ─── MUSIC ─── */
+.spotify-btn {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: #1DB954;
+  border-radius: 14px;
+  padding: 16px 20px;
+  text-decoration: none;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 4px 22px rgba(29,185,84,0.22);
+}
+.spotify-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(29,185,84,0.32);
+}
+
+.sp-icon {
+  width: 46px; height: 46px;
+  background: rgba(255,255,255,0.18);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+  color: white;
+}
+.sp-info { flex: 1; }
+.sp-micro { font-size: 10px; color: rgba(255,255,255,0.55); letter-spacing: 1.5px; text-transform: uppercase; }
+.sp-song { font-size: 16px; font-weight: 500; color: white; margin-top: 2px; }
+.sp-artist { font-size: 12px; color: rgba(255,255,255,0.65); margin-top: 2px; }
+.sp-play { font-size: 24px; color: rgba(255,255,255,0.75); }
+
+/* ─── FOOTER ─── */
+.footer {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 28px 20px 56px;
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-size: 15px;
+  color: rgba(160,112,128,0.55);
+}
+
+/* ─── ENTRANCE ANIMATIONS ─── */
+.fade-up {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.fade-up.in {
+  opacity: 1;
+  transform: none;
+}
+</style>
+</head>
+<body>
+
+<!-- ══ LOCK SCREEN ══ -->
+<div id="lock-screen">
+  <div class="lock-stars" id="stars"></div>
+  <div class="lock-inner">
+    <div class="lock-icon">🌹</div>
+    <div class="lock-title">มีบางอย่างรอเธออยู่</div>
+    <div class="lock-sub">something special</div>
+
+    <div class="lock-countdown">
+      <div class="lock-unit">
+        <span class="lock-num" id="l-days">00</span>
+        <span class="lock-label">วัน</span>
+      </div>
+      <div class="lock-unit">
+        <span class="lock-num" id="l-hours">00</span>
+        <span class="lock-label">ชั่วโมง</span>
+      </div>
+      <div class="lock-unit">
+        <span class="lock-num" id="l-mins">00</span>
+        <span class="lock-label">นาที</span>
+      </div>
+      <div class="lock-unit">
+        <span class="lock-num" id="l-secs">00</span>
+        <span class="lock-label">วินาที</span>
+      </div>
+    </div>
+
+    <div class="lock-hint">รอสักนิดนะ... มีอะไรสวยงามรออยู่ข้างหน้า</div>
+
+    <div class="lock-progress">
+      <div class="pb-bg">
+        <div class="pb-fill" id="progress-fill" style="width:0%"></div>
+      </div>
+      <div class="pb-label" id="progress-label">0%</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ REVEAL ══ -->
+<div id="reveal-overlay">
+  <div class="reveal-heart">💖</div>
+  <div class="reveal-text">ครบ 1 เดือนแล้วนะ...</div>
+</div>
+
+<!-- ══ MAIN CONTENT ══ -->
+<div id="main-content">
+  <div class="petals-bg" id="petals"></div>
+
+  <!-- Hero -->
+  <div class="hero fade-up">
+    <div class="hero-ornament">✦ &nbsp; สำหรับเธอ &nbsp; ✦</div>
+    <span class="hero-rose">🌹</span>
+    <div class="hero-title">สำหรับอ้อมแอ้ม</div>
+    <div class="hero-sub">with all my love</div>
+    <div class="divider"></div>
+  </div>
+
+  <!-- Countdown -->
+  <div class="section fade-up" style="transition-delay:0.15s;">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-header-icon">🎉</span>
+        <span class="card-header-title">ครบรอบ 1 เดือนของเรา</span>
+      </div>
+      <div class="card-body">
+        <div class="event-label">ครบรอบ 1 เดือน 🌹</div>
+        <div class="main-countdown">
+          <div class="main-unit">
+            <span class="main-num" id="m-days">00</span>
+            <div class="main-label">วัน</div>
+          </div>
+          <div class="main-unit">
+            <span class="main-num" id="m-hours">00</span>
+            <div class="main-label">ชั่วโมง</div>
+          </div>
+          <div class="main-unit">
+            <span class="main-num" id="m-mins">00</span>
+            <div class="main-label">นาที</div>
+          </div>
+          <div class="main-unit">
+            <span class="main-num" id="m-secs">00</span>
+            <div class="main-label">วินาที</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Letter -->
+  <div class="section fade-up" style="transition-delay:0.3s;">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-header-icon">✉️</span>
+        <span class="card-header-title">จดหมายรัก</span>
+      </div>
+      <div class="card-body">
+        <div class="letter-deco-top">— &nbsp; จากใจ &nbsp; —</div>
+        <div class="letter-body">ถึงอ้อมแอ้มแฟนของเค้า
+
+เค้ารู้สึกดีมากที่มีเธออยู่ข้างๆ เสมอ แบบบางทีทำงานมาเหนื่อยก็มีแชทเธอคอยให้กำลังใจ คอยบอกฝันดีตลอด เค้ารู้สึกดีมากๆ กับเธอนะ ขอบคุณทุกๆ สิ่งทุกๆ อย่างที่ผ่านมา เค้าอยากกอดเธอไม่ไหวแล้วรู้มั้ยย
+
+ขอบคุณนะแฟน เค้าอยากมีเธออยู่ข้างๆ ด้วยกันตลอดไป 💕</div>
+        <div class="letter-sig">— ยาย่า</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Music -->
+  <div class="section fade-up" style="transition-delay:0.45s;">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-header-icon">🎵</span>
+        <span class="card-header-title">เพลงของเรา</span>
+      </div>
+      <div class="card-body">
+        <a class="spotify-btn" href="https://open.spotify.com/track/1Q7EgiMOuwDcB0PJC6AzON" target="_blank">
+          <div class="sp-icon">♪</div>
+          <div class="sp-info">
+            <div class="sp-micro">เพลงที่มอบให้เธอ</div>
+            <div class="sp-song">Best Part</div>
+            <div class="sp-artist">Daniel Caesar</div>
+          </div>
+          <div class="sp-play">▶</div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer fade-up" style="transition-delay:0.6s;">
+    made with 💗 just for you, อ้อมแอ้ม
+  </div>
+</div>
+
+<script>
+// ── config ──
+const UNLOCK = new Date('2026-04-30T00:00:00').getTime();
+const START  = UNLOCK - 29 * 24 * 60 * 60 * 1000; // ~1 April
+
+function pad(n){ return String(n).padStart(2,'0'); }
+
+// stars
+(function(){
+  const el = document.getElementById('stars');
+  for(let i=0;i<90;i++){
+    const s = document.createElement('div');
+    s.className='star';
+    const sz = 0.8 + Math.random()*2.4;
+    s.style.cssText=`width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;animation-duration:${2+Math.random()*4}s;animation-delay:${Math.random()*6}s;`;
+    el.appendChild(s);
+  }
+})();
+
+// petals
+(function(){
+  const el = document.getElementById('petals');
+  const colors=['#ffb3c6','#ff8fa3','#ffccd5','#ffc2d4','#ffd6e0','#f8a8b8'];
+  for(let i=0;i<22;i++){
+    const p=document.createElement('div');
+    p.className='petal';
+    const sz=7+Math.random()*13;
+    p.style.cssText=`width:${sz}px;height:${sz*1.35}px;left:${Math.random()*100}%;background:${colors[i%colors.length]};animation-duration:${8+Math.random()*10}s;animation-delay:${Math.random()*14}s;transform:rotate(${Math.random()*360}deg);`;
+    el.appendChild(p);
+  }
+})();
+
+// countdown helpers
+function diffParts(ms){
+  ms = Math.max(0, ms);
+  return {
+    days:  Math.floor(ms/86400000),
+    hours: Math.floor((ms%86400000)/3600000),
+    mins:  Math.floor((ms%3600000)/60000),
+    secs:  Math.floor((ms%60000)/1000)
+  };
+}
+
+// lock countdown
+function tickLock(){
+  const diff = UNLOCK - Date.now();
+  if(diff <= 0){ reveal(); return; }
+  const p = diffParts(diff);
+  document.getElementById('l-days').textContent  = pad(p.days);
+  document.getElementById('l-hours').textContent = pad(p.hours);
+  document.getElementById('l-mins').textContent  = pad(p.mins);
+  document.getElementById('l-secs').textContent  = pad(p.secs);
+  const pct = Math.min(100, Math.max(0, ((Date.now()-START)/(UNLOCK-START))*100));
+  document.getElementById('progress-fill').style.width = pct.toFixed(1)+'%';
+  document.getElementById('progress-label').textContent = pct.toFixed(0)+'%';
+}
+
+// main countdown (time since unlock — counting up)
+function tickMain(){
+  const p = diffParts(Date.now() - UNLOCK);
+  document.getElementById('m-days').textContent  = pad(p.days);
+  document.getElementById('m-hours').textContent = pad(p.hours);
+  document.getElementById('m-mins').textContent  = pad(p.mins);
+  document.getElementById('m-secs').textContent  = pad(p.secs);
+}
+
+let revealed = false;
+let lockTimer;
+
+function reveal(){
+  if(revealed) return;
+  revealed = true;
+  clearInterval(lockTimer);
+
+  const overlay = document.getElementById('reveal-overlay');
+  overlay.style.display = 'flex';
+
+  setTimeout(()=>{
+    document.getElementById('lock-screen').style.display = 'none';
+    overlay.style.display = 'none';
+
+    const main = document.getElementById('main-content');
+    main.style.display = 'block';
+    main.getBoundingClientRect();
+    main.classList.add('visible');
+
+    // stagger fade-up cards
+    document.querySelectorAll('.fade-up').forEach((el,i)=>{
+      setTimeout(()=>el.classList.add('in'), 100 + i*140);
+    });
+
+    tickMain();
+    setInterval(tickMain, 1000);
+  }, 2400);
+}
+
+// boot
+if(Date.now() >= UNLOCK){
+  document.getElementById('lock-screen').style.display = 'none';
+  const main = document.getElementById('main-content');
+  main.style.display = 'block';
+  main.classList.add('visible');
+  document.querySelectorAll('.fade-up').forEach((el,i)=>{
+    setTimeout(()=>el.classList.add('in'), 80 + i*130);
+  });
+  tickMain();
+  setInterval(tickMain, 1000);
+} else {
+  tickLock();
+  lockTimer = setInterval(tickLock, 1000);
+}
+</script>
+</body>
+</html>
